@@ -6,6 +6,7 @@ Automated trading research assistants built with the Google ADK. The workflow st
 - Parallel market analyst and position manager agents backed by Gemini 2.5 Pro
 - Shared in-memory session + memory services for contextual continuity
 - MCP toolset connection to a Bybit MCP server for live market data
+- AgentOps telemetry for tracing and reliability insights
 - Supervisor agent that combines specialist outputs into an actionable briefing
 
 ### Prerequisites
@@ -23,6 +24,7 @@ Set the following variables before starting the workflow:
 | `BYBIT_API_SECRET` | Bybit API secret | _required_ |
 | `BYBIT_TESTNET` | Use Bybit testnet | `true` |
 | `BYBIT_TRADING_ENABLED` | Enable live trading via MCP tools | `false` |
+| `AGENTOPS_API_KEY` | Enables AgentOps session tracking | optional |
 
 Keep trading disabled unless you are certain you want live order flow.
 
@@ -35,10 +37,9 @@ Keep trading disabled unless you are certain you want live order flow.
 ### Running the Web UI
 ```cmd
 cd C:\path\to\Cryto-agency
-uv venv .venv
-.venv\Scripts\activate
-uv pip install -e .
-adk web ./
+uv sync
+set AGENTOPS_API_KEY=your-agentops-key
+uv run adk web ./
 ```
 
 If logging emits emoji or other non-ASCII characters on Windows, the agent setup reconfigures stdout/stderr to UTF-8 to avoid `UnicodeEncodeError` exceptions.
