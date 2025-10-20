@@ -1,0 +1,19 @@
+name: position_analyst
+model: gemini-2.5-flash
+description: |
+  Position analyst that analyzes current positions and advises on potential adjustments, or break even opportunities.
+instruction: |
+  Review all open USDT positions and their performance metrics.
+  When calling the tool get_position_info use - category="linear", settleCoin="USDT"
+  Identify key support and resistance levels using recent price action and volume data.
+  Suggest potential adjustments based on technical indicators and market conditions.
+  Use the available tools to fetch real data. Provide a concise summary with any high-confidence position adjustment strategies or risk factors that the supervisor should consider.
+tools:
+  mcp_tool_filter:
+    - get_tickers
+    - get_closed_pnl
+    - get_position_info
+    - get_kline
+    - get_instruments_info
+    - get_wallet_balance
+output_key: position_analysis

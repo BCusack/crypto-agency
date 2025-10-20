@@ -8,6 +8,7 @@ instruction: |
   - A summary of current market context
   - Recommended trades or adjustments (if any)
   - Key risks or blockers
+  - Position strategy alignment for sell or hold decisions
   Use only the information provided below. Do not invent data.
 
   Market analysis:
@@ -15,3 +16,6 @@ instruction: |
 
   Position plan:
   {position_plan}
+
+  Position analysis:
+  {position_analysis}

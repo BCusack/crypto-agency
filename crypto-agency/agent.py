@@ -2,7 +2,7 @@ import logging
 from google.adk.agents import ParallelAgent, SequentialAgent, LlmAgent
 from google.adk.memory import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
-from utils import (
+from .utils import (
     build_mcp_toolset,
     configure_utf8_stdio,
     init_agentops,
@@ -27,6 +27,7 @@ logger.debug("Initializing agent configurations and services.")
 _SUPERVISOR_CONFIG = load_agent_config("crypto_trading_supervisor.yaml")
 _ANALYST_CONFIG = load_agent_config("market_analyst.yaml")
 _POSITION_MANAGER_CONFIG = load_agent_config("position_manager.yaml")
+_POSITION_ANALYST_CONFIG = load_agent_config("position_analyst.yaml")
 
 market_analyst_agent = LlmAgent(
     model=_ANALYST_CONFIG.get("model", "gemini-2.5-pro"),
@@ -39,6 +40,19 @@ market_analyst_agent = LlmAgent(
         ),
     ],
     output_key=_ANALYST_CONFIG.get("output_key"),
+)
+
+position_analysis_agent = LlmAgent(
+    model=_POSITION_ANALYST_CONFIG.get("model", "gemini-2.5-pro"),
+    name=_POSITION_ANALYST_CONFIG.get("name", "position_analysis"),
+    description=_POSITION_ANALYST_CONFIG.get("description", ""),
+    instruction=_POSITION_ANALYST_CONFIG.get("instruction", ""),
+    tools=[
+        build_mcp_toolset(
+            _POSITION_ANALYST_CONFIG.get("tools", {}).get("mcp_tool_filter")
+        ),
+    ],
+    output_key=_POSITION_ANALYST_CONFIG.get("output_key"),
 )
 
 position_manager_agent = LlmAgent(
@@ -56,8 +70,8 @@ position_manager_agent = LlmAgent(
 
 parallel_specialists = ParallelAgent(
     name="crypto_parallel_specialists",
-    sub_agents=[market_analyst_agent, position_manager_agent],
-    description="Runs market analyst and position manager in parallel to accelerate decision-making.",
+    sub_agents=[market_analyst_agent, position_manager_agent, position_analysis_agent],
+    description="Runs market analyst and position manager and position analysis in parallel to accelerate decision-making.",
 )
 
 
