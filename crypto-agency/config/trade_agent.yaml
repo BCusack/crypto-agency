@@ -1,0 +1,24 @@
+name: trade_agent
+model: gemini-2.5-flash
+description: |
+  A trading agent that executes trades based on the supervisor's final guidance.
+instruction: |
+  Execute the trade plan provided by the supervisor.
+  You can place, cancel, check existing positions, and check orders.
+  Ensure that you are using the correct symbol, quantity, and price.
+  Always have a stop loss in place for every trade.
+  category="linear"
+tools:
+  mcp_tool_filter:
+    - get_wallet_balance
+    - place_order
+    - place_trigger_order
+    - cancel_order
+    - cancel_all_orders
+    - set_trading_stop
+    - set_leverage
+    - get_open_closed_orders
+    - get_position_info
+    - get_tickers
+    - get_kline
+output_key: trade_execution_result

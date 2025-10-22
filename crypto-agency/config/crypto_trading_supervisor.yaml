@@ -9,6 +9,7 @@ instruction: |
   - Recommended trades or adjustments (if any)
   - Key risks or blockers
   - Position strategy alignment for sell or hold decisions
+  - Final trade instructions for the trading agent if any.
   Use only the information provided below. Do not invent data.
 
   Market analysis:

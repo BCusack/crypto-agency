@@ -28,6 +28,7 @@ _SUPERVISOR_CONFIG = load_agent_config("crypto_trading_supervisor.yaml")
 _ANALYST_CONFIG = load_agent_config("market_analyst.yaml")
 _POSITION_MANAGER_CONFIG = load_agent_config("position_manager.yaml")
 _POSITION_ANALYST_CONFIG = load_agent_config("position_analyst.yaml")
+_TRADE_AGENT_CONFIG = load_agent_config("trade_agent.yaml")
 
 market_analyst_agent = LlmAgent(
     model=_ANALYST_CONFIG.get("model", "gemini-2.5-pro"),
@@ -68,6 +69,19 @@ position_manager_agent = LlmAgent(
     output_key=_POSITION_MANAGER_CONFIG.get("output_key"),
 )
 
+trade_agent = LlmAgent(
+    model=_TRADE_AGENT_CONFIG.get("model", "gemini-2.5-pro"),
+    name=_TRADE_AGENT_CONFIG.get("name", "trade_agent"),
+    description=_TRADE_AGENT_CONFIG.get("description", ""),
+    instruction=_TRADE_AGENT_CONFIG.get("instruction", ""),
+    tools=[
+        build_mcp_toolset(
+            _TRADE_AGENT_CONFIG.get("tools", {}).get("mcp_tool_filter")
+        ),
+    ],
+    output_key=_TRADE_AGENT_CONFIG.get("output_key"),
+)
+
 parallel_specialists = ParallelAgent(
     name="crypto_parallel_specialists",
     sub_agents=[market_analyst_agent, position_manager_agent, position_analysis_agent],
@@ -85,6 +99,6 @@ supervisor_agent = LlmAgent(
 
 root_agent = SequentialAgent(
     name="crypto_trading_workflow",
-    sub_agents=[parallel_specialists, supervisor_agent],
-    description="Supervisor orchestrates analyst and position manager outputs for final guidance.",
+    sub_agents=[parallel_specialists, supervisor_agent, trade_agent],
+    description="Supervisor orchestrates analyst and position manager outputs for final guidance, which is then executed by the trade agent.",
 )

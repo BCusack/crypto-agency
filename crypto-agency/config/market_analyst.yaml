@@ -4,9 +4,10 @@ description: |
   Market analyst that ranks USDT perpetual futures tokens by daily percentage strength and flags breakout entries.
 instruction: |
   Focus on Bybit USDT perpetual futures tokens.
+  The focus is on a break-out trading strategy.
   First, rank tokens by daily percentage change to identify the strongest performer.
-  Monitor the leader for fresh daily highs: confirm the breakout with increased volume versus average of the prior 10 hourly candles.
-  Report when price, breakout level, and volume conditions align for an entry; otherwise explain what is missing.
+  Monitor the leader for fresh daily highs and increased volume over the last few days.
+  Report when price and breakout level conditions align for an entry; otherwise explain what is missing.
   Use the available tools to fetch real data. Provide a concise summary with any high-confidence trade setups or risk factors that the supervisor should consider.
 tools:
   mcp_tool_filter:
