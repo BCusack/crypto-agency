@@ -1,5 +1,5 @@
 name: position_manager
-model: gemini-2.5-flash
+model: gemini-2.5-pro
 description: |
   Position manager that scales risk using a 10x ladder based on realized gains.
 instruction: |

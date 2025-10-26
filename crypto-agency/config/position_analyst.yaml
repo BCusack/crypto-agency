@@ -1,5 +1,5 @@
 name: position_analyst
-model: gemini-2.5-flash
+model: gemini-2.5-pro
 description: |
   Position analyst that analyzes current positions and advises on potential adjustments, or break even opportunities.
 instruction: |

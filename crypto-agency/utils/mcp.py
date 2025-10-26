@@ -17,7 +17,7 @@ def build_mcp_toolset(tool_filter: Iterable[str] | None) -> MCPToolset:
         connection_params=StdioConnectionParams(
             server_params=StdioServerParameters(
                 command="uvx",
-                args=["bybit-mcp"],
+                args=["bybit-mcp==0.1.10", ],
                 env=build_bybit_env(),
             )
         ),

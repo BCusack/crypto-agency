@@ -1,5 +1,6 @@
 import logging
 from google.adk.agents import ParallelAgent, SequentialAgent, LlmAgent
+from google.adk.tools import agent_tool
 from google.adk.memory import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
 from .utils import (
@@ -82,23 +83,22 @@ trade_agent = LlmAgent(
     output_key=_TRADE_AGENT_CONFIG.get("output_key"),
 )
 
-parallel_specialists = ParallelAgent(
-    name="crypto_parallel_specialists",
-    sub_agents=[market_analyst_agent, position_manager_agent, position_analysis_agent],
-    description="Runs market analyst and position manager and position analysis in parallel to accelerate decision-making.",
-)
-
 
 supervisor_agent = LlmAgent(
     model=_SUPERVISOR_CONFIG.get("model", "gemini-2.5-pro"),
     name=_SUPERVISOR_CONFIG.get("name", "crypto_trading_supervisor"),
     description=_SUPERVISOR_CONFIG.get("description", ""),
     instruction=_SUPERVISOR_CONFIG.get("instruction", ""),
+    tools=[
+        agent_tool.AgentTool(agent=market_analyst_agent),
+        agent_tool.AgentTool(agent=position_manager_agent),
+        agent_tool.AgentTool(agent=position_analysis_agent),
+        agent_tool.AgentTool(agent=trade_agent),
+    ],
 )
 
-
 root_agent = SequentialAgent(
-    name="crypto_trading_workflow",
-    sub_agents=[parallel_specialists, supervisor_agent, trade_agent],
-    description="Supervisor orchestrates analyst and position manager outputs for final guidance, which is then executed by the trade agent.",
+    name="crypto_trading_agent",
+    sub_agents=[supervisor_agent],
+    description="Supervisor orchestrates analyst and position manager outputs for final guidance, which is then executed by the trade agent."
 )
